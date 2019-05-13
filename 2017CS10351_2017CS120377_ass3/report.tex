@@ -1,0 +1,94 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{cite}
+\usepackage{hyperref}
+
+\usepackage[export]{adjustbox}
+\usepackage{graphics} % or graphicx 
+\title{\textbf{BOOST MATRIX MULTIPLICATION\\}}
+    
+\author{Shivam : 2017CS10377\\
+        {\textit email: \href{mailto:cs1170377@iitd.ac.in}{cs1170377@iitd.ac.in}}\\
+        Meenal : 2017CS10351\\
+        {\textit email: \href{mailto:cs1170351@iitd.ac.in}{cs1170351@iitd.ac.in}}
+        }
+\makeatletter
+\newcommand{\heading}[1]% #1 = text
+{\par\vskip 1.5ex \@plus .2ex
+ \hangindent=1em
+ \noindent\makebox[1em][l]{$\,\bullet$}{\large #1}%
+\par\vskip 1.5ex \@plus .2ex
+\@afterheading}
+\makeatother
+
+\begin{document}
+
+\maketitle
+\section{Linear Algebra Libraries}
+There exists various Linear Algebra Libraries which can be used to enhance the speed of computation. In our subtask, we have used following two libraries to accelerate matrix-matrix multiplication. \\
+\subsection{MKL}
+Intel MKL performs fast matrix-matrix multiplication.It provides a compiler flag to guarantee that the fastest code path is used at runtime.\\
+In our code we have included the library "mkl.h" and the function cblas sgemm for performing multiplication through mkl.\\
+We have used it from \cite{IntelMKL}.
+
+\subsection{OpenbLAS}
+OpenBLAS is an optimized BLAS library. OpenBLAS adds optimized implementations of linear algebra kernels for several processor architectures. Its performance is comparable(slightly slow) to Intel MKL.\\
+In our code we have included the library "cblas.h" and the function cblas sgemm for performing multiplication through openBLAS.\\
+We have used it from \cite{OpenBLAS}.
+
+\section{Performance Comparison}
+\begin{center}
+  \begin{tabular}{ p{1 cm} | p{2 cm} | p{2 cm} | p{2 cm} | p{2 cm}}
+    \hline
+    Matrix Size & MKL (Average) & MKL (Std. Deviation) & OpenBLAS (Average) & OpenBLAS (Std. Deviation)\\ \hline
+     60 & 10.2 & 12.76 & 19.8 & 10.12\\ \hline
+    100 & 22.0 & 11.51 & 28.6 & 12.42\\ \hline
+    140 & 44.6 & 23.79 & 52.0 & 5.74\\ \hline
+    180 & 59.8 & 18.32 & 62.2 & 17.15\\
+    \hline
+  \end{tabular}
+\end{center}
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{mkl.png}
+ \caption{Plot for mkl}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{openblas.png}
+ \caption{Plot for openblas}
+\end{figure}
+\pagebreak
+\section{Acceleration With Pthreads}
+\heading{POSIX thread (pthread) allows use of concurrent or parallel programming to get computed results with faster speeds.}
+\heading{We implemented matrix multiplication used in convolution using pthreads. We worked with 4 threads,on all matrix sizes mentioned in the table below.}
+\heading{In our implementation different threads compute different parts of the resultant matrix and then are joined to get the final output.}
+\heading{Sometimes we were facing the issue that our program exited without waiting for the last thread to complete, and the other times the program exited with complete and correct output. We used join() function to join pthreads but could not figure out what is wrong.}
+\heading{Pthread took a bit longer on smaller matrices accounting to the time taken in creating and destroying multiple threads.\\}
+
+\begin{center}
+  \begin{tabular}{ p{1 cm} | p{2 cm} | p{2 cm} | p{2 cm} | p{2 cm}}
+    \hline
+    Matrix Size & Original (Average) & Original (Std. Deviation) & Pthread (Average) & Pthread (Std. Deviation)\\ \hline
+    60 & 18.4 & 12.54 & 31.2 & 1.96\\ \hline
+    100 & 40.4 & 11.52 & 38.2 & 17.91\\ \hline
+    140 & 32.4 & 15.48 & 28.6 & 11.36\\ \hline
+    180 & 48.4 & 16.71 & 46.8 & 10.12\\ 
+    \hline
+  \end{tabular}
+\end{center}
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{pthreading.png}
+ \caption{Plot for Pthread}
+\end{figure}
+
+\medskip
+
+\bibliographystyle{unsrt}%Used BibTeX style is unsrt
+\bibliography{sample}
+
+\end{document}
+
